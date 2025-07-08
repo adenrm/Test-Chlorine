@@ -15,6 +15,10 @@ Route::middleware([
     'verified',
 ])->group(function () {
 
+    Route::get('profile', function () {
+        return view('auth.index');
+    })->name('auth.index');
+
 
     Route::get('admin', function () {
         return view('admin.index');

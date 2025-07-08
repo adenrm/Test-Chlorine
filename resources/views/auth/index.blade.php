@@ -8,12 +8,12 @@
 </head>
 @vite('resources/css/app.css', 'resources/js/app.js')
 <body class="">
-    <div class="w-64 bg-white p-4 flex items-center justify-between" x-data="{ sidebarOpen: true }">
-        <div class="flex items-center space-x-3">
-            <!-- Burger button -->
-            <button @click="sidebarOpen = !sidebarOpen" class="focus:outline-none">
-                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
-                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+     <div class="w-64 bg-white p-4 flex items-center justify-between" x-data="{ sidebarOpen: true }">
+    <div class="flex items-center space-x-3">
+        <!-- Burger button -->
+        <button @click="sidebarOpen = !sidebarOpen" class="focus:outline-none">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <line x1="3" y1="12" x2="21" y2="12"/>
                 <line x1="3" y1="6" x2="21" y2="6"/>
                 <line x1="3" y1="18" x2="21" y2="18"/>
@@ -21,14 +21,11 @@
         </button>
         <span class="font-bold text-lg select-none">LOGO</span>
     </div>
-    <div class="flex-shrink-0">
-        <img src="{{ Auth::user()->profile_photo_url ? Auth::user()->profile_photo_url : 'https://ui-avatars.com/api/?name=John+Doe' }}" 
-             alt="{{ Auth::user()->name }}" 
-             class="h-10 w-10 rounded-full object-cover">
+    <div class="ml-auto">
+        <img src="{{ Auth::user()->profile_photo_url ? Auth::user()->profile_photo_url : 'https://ui-avatars.com/api/?name=John+Doe' }}" alt="{{ Auth::user()->name }}" class="h-10 w-10 rounded-full object-cover">
     </div>
 </div>
-
-<div class="bg-gray-100 font-sans">
+    <div class="bg-gray-100 font-sans">
         <div class="flex h-screen">
             
            <aside class="w-64 bg-white p-4 flex shadow-md flex-col">
@@ -108,46 +105,54 @@
         </aside>
         
         <main class="flex-1 p-6">
-            <h1 class="text-2xl font-semibold text-gray-800 mb-6">Category</h1>
-             
-            
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <h2 class="text-xl font-semibold text-gray-800 mb-4">List</h2>
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Publish</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-green-500 uppercase tracking-wider">
-                                    <a href="{{ route('category.create') }}">Add</a>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            @foreach ($category as $index => $item)
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $category->firstItem() + $index  }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $item->name }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 font-medium">{{ $item->is_publish == 1 ? 'Yes' : 'No' }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                <a href="{{ route('category.edit', $item->id) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>
-                                <form action="{{ route('category.destroy', $item->id) }}" method="POST" class="inline">
+            <div class="flex flex-row gap-5">
+                <h1 class="text-2xl font-semibold text-gray-800 mb-6">Profile</h1>
+                <form method="POST" action="{{ route('logout') }}" x-data>
                                     @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('Apakah kamu yakin ingin menghapus category {{ $item->name }}')">Delete</button>
+    
+                                    <x-dropdown-link class="text-black font-bold rounded bg-red-500 hover:text-red-500" href="{{ route('logout') }}"
+                                             @click.prevent="$root.submit();">
+                                        {{ __('Log Out') }}
+                                    </x-dropdown-link>
                                 </form>
-                            </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-                 <div class="mt-4">
-            {{ $category->links() }}
-                </div>
             </div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                @if (Laravel\Fortify\Features::canUpdateProfileInformation())
+                @livewire('profile.update-profile-information-form')
+
+                <x-section-border />
+            @endif
+            
+            @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::updatePasswords()))
+                <div class="mt-10 sm:mt-0">
+                    @livewire('profile.update-password-form')
+                </div>
+
+                <x-section-border />
+            @endif
+
+            @if (Laravel\Fortify\Features::canManageTwoFactorAuthentication())
+                <div class="mt-10 sm:mt-0">
+                    @livewire('profile.two-factor-authentication-form')
+                </div>
+
+                <x-section-border />
+            @endif
+
+            <div class="mt-10 sm:mt-0">
+                @livewire('profile.logout-other-browser-sessions-form')
+            </div>
+
+            @if (Laravel\Jetstream\Jetstream::hasAccountDeletionFeatures())
+                <x-section-border />
+
+                <div class="mt-10 sm:mt-0">
+                    @livewire('profile.delete-user-form')
+                </div>
+            @endif
+
+            
+               
         </main>
     </div>
 </div>

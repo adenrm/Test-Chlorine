@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\CategoryNotification;
 use App\Models\Category;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class CategoryController extends Controller
 {
@@ -32,6 +35,11 @@ class CategoryController extends Controller
         ]);
         
         $category = Category::create($request->all());
+
+        $users = User::all();
+        foreach ($users as $user) {
+            Mail::to($user->email)->queue(new CategoryNotification('added', $category));
+        }
         
         return redirect()->route('category')
             ->with('success', 'Category berhasil dibuat dengan nama '.$category->name);
@@ -61,7 +69,12 @@ class CategoryController extends Controller
     public function destroy(string $id)
     {
         $data = Category::findOrFail($id);
+        $categoryName = $data->name;
         $data->delete();
+        $users = User::all();
+        foreach ($users as $user) {
+            Mail::to($user->email)->queue(new CategoryNotification('deleted', $categoryName));
+        }
         return redirect()->route('category', '?page=1')->with('delete', 'Category berhasil di delete');
     }
 }
