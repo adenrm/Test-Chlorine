@@ -132,6 +132,7 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $item->name }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 font-medium">{{ $item->is_publish == 1 ? 'Yes' : 'No' }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <a href="{{ route('category.show', $item->id) }}" class="text-blue-600 hover:text-blue-900 mr-3">Detail</a>
                                 <a href="{{ route('category.edit', $item->id) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>
                                 <form action="{{ route('category.destroy', $item->id) }}" method="POST" class="inline">
                                     @csrf

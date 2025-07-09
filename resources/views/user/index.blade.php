@@ -127,6 +127,7 @@
                             <td class="px-6 py-4 whitespace-nowrap">{{ $user->name }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ $user->email }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <a href="{{ route('user.show', $user->id) }}" class="text-blue-600 hover:text-blue-900 mr-3">Detail</a>
                                 <a href="{{ route('user.edit', $user->id) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>
                                 <form action="{{ route('user.destroy', $user->id) }}" method="POST" class="inline">
                                     @csrf
