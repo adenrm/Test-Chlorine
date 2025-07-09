@@ -20,10 +20,6 @@ Route::middleware([
     })->name('auth.index');
 
 
-    Route::get('admin', function () {
-        return view('admin.index');
-    });
-
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');

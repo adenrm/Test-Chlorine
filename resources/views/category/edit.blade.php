@@ -1,6 +1,5 @@
     <h1>Edit Produk</h1>
     <form action="{{ route('category.update') }}" method="POST">
-        @method('put')
         @csrf
         <a href="{{ route('category') }}">Kembali</a>
     @if ($errors->any())

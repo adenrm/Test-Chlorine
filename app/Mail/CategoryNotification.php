@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class CategoryNotification extends Mailable
+class CategoryNotification extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -19,16 +19,10 @@ class CategoryNotification extends Mailable
     /**
      * Create a new message instance.
      */
-      public function __construct(string $action, $category)
+    public function __construct(string $action, $category)
     {
         $this->action = $action;
         $this->category = $category;
-    }
-
-    public function build()
-    {
-        return $this->subject("Category has been {$this->action}")
-                    ->view('emails.category_notification');
     }
 
     /**
@@ -37,7 +31,7 @@ class CategoryNotification extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Category Notification',
+            subject: "Category has been {$this->action}",
         );
     }
 
@@ -47,7 +41,7 @@ class CategoryNotification extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            view: 'emails.category_notification',
         );
     }
 

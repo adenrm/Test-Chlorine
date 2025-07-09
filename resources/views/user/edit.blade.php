@@ -1,7 +1,6 @@
 <form class="max-w-sm mx-auto" action="{{ route('user.update') }}" method="POST">
     <a href="{{ route('user.index') }}">Kembali</a>
     @csrf
-    @method('put')
        @if ($errors->any())
        @foreach ($errors as $item)
        <div class="text-red-500">{{ $item }}</div>

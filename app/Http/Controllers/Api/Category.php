@@ -41,7 +41,7 @@ class Category extends Controller
         ], 201);
     }
 
-    public function update(Request $request)
+    public function update(Request $request, String $id)
     {
         $request->validate([
             'name' => 'required',
